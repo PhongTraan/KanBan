@@ -1,5 +1,14 @@
 import React, { CSSProperties, useEffect, useMemo, useState } from "react";
-import { Button, Grid, Menu, Modal, Paper, Stack, Text } from "@mantine/core";
+import {
+  Button,
+  Grid,
+  Menu,
+  Modal,
+  Paper,
+  ScrollArea,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { PiExclamationMarkFill } from "react-icons/pi";
 import { CiEdit } from "react-icons/ci";
 import { FaTasks } from "react-icons/fa";
@@ -200,79 +209,79 @@ const Column = ({ id, title, isPublic, status }: ColumnProps) => {
             >
               {title} {tasksData?.length}
             </Text>
-            <SortableContext
-              id={status}
-              //  items={tasks.map((item) => item.id)}
-              items={listShortDataTaskId}
-            >
-              <Stack gap="lg">
-                {sortedTasks?.map((item) => (
-                  <Menu
-                    shadow="md"
-                    width={200}
-                    position="right-start"
-                    key={item.id}
-                  >
-                    <Menu.Target>
-                      <div
-                        style={cardStyle}
-                        onMouseOver={(e) => {
-                          e.currentTarget.style.backgroundColor = "gray";
-                        }}
-                        onMouseOut={(e) => {
-                          e.currentTarget.style.backgroundColor = "";
-                        }}
-                      >
-                        <Card item={item} />
-                      </div>
-                    </Menu.Target>
-                    <Menu.Dropdown
-                      style={{ marginLeft: "auto", marginTop: 10 }}
+            <SortableContext id={status} items={listShortDataTaskId}>
+              <ScrollArea.Autosize mah={300}>
+                <Stack gap="lg">
+                  {sortedTasks?.map((item) => (
+                    <Menu
+                      shadow="md"
+                      width={200}
+                      position="right-start"
+                      key={item.id}
                     >
-                      <Menu.Item
-                        onClick={() => handleEditTask(item)}
-                        leftSection={
-                          <CiEdit style={{ width: 19, height: 19 }} />
-                        }
+                      <Menu.Target>
+                        <div
+                          style={cardStyle}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = "gray";
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = "";
+                          }}
+                        >
+                          <Card item={item} />
+                        </div>
+                      </Menu.Target>
+                      <Menu.Dropdown
+                        style={{ marginLeft: "auto", marginTop: 10 }}
                       >
-                        <div className="font-semibold text-[15px]">Edit</div>
-                      </Menu.Item>
-                      <Menu.Item
-                        leftSection={
-                          <PiExclamationMarkFill
-                            style={{ width: 19, height: 19 }}
-                          />
-                        }
-                      >
-                        <div className="font-semibold text-[15px]">Details</div>
-                      </Menu.Item>
-                      {isPublic ? (
+                        <Menu.Item
+                          onClick={() => handleEditTask(item)}
+                          leftSection={
+                            <CiEdit style={{ width: 19, height: 19 }} />
+                          }
+                        >
+                          <div className="font-semibold text-[15px]">Edit</div>
+                        </Menu.Item>
                         <Menu.Item
                           leftSection={
-                            <FaTasks style={{ width: 19, height: 19 }} />
+                            <PiExclamationMarkFill
+                              style={{ width: 19, height: 19 }}
+                            />
                           }
-                          onClick={() => handleTakeTask(item.id)}
                         >
                           <div className="font-semibold text-[15px]">
-                            Take Task
+                            Details
                           </div>
                         </Menu.Item>
-                      ) : (
-                        <Menu.Item
-                          leftSection={
-                            <GiCancel style={{ width: 19, height: 19 }} />
-                          }
-                          onClick={() => handleCancelTakeTask(item.id)}
-                        >
-                          <div className="font-semibold text-[15px]">
-                            Cancel Task
-                          </div>
-                        </Menu.Item>
-                      )}
-                    </Menu.Dropdown>
-                  </Menu>
-                ))}
-              </Stack>
+                        {isPublic ? (
+                          <Menu.Item
+                            leftSection={
+                              <FaTasks style={{ width: 19, height: 19 }} />
+                            }
+                            onClick={() => handleTakeTask(item.id)}
+                          >
+                            <div className="font-semibold text-[15px]">
+                              Take Task
+                            </div>
+                          </Menu.Item>
+                        ) : (
+                          <Menu.Item
+                            leftSection={
+                              <GiCancel style={{ width: 19, height: 19 }} />
+                            }
+                            onClick={() => handleCancelTakeTask(item.id)}
+                          >
+                            <div className="font-semibold text-[15px]">
+                              Cancel Task
+                            </div>
+                          </Menu.Item>
+                        )}
+                      </Menu.Dropdown>
+                    </Menu>
+                  ))}
+                </Stack>
+              </ScrollArea.Autosize>
 
               {status === "TO_DO_LIST" && (
                 <div className="mt-4">
@@ -288,19 +297,6 @@ const Column = ({ id, title, isPublic, status }: ColumnProps) => {
               )}
             </SortableContext>
           </Paper>
-          {/* <DragOverlay>
-            {activeTask ? (
-              <Paper
-                shadow="md"
-                p="md"
-                radius="sm"
-                bg="#454545"
-                style={{ opacity: 0.5 }}
-              >
-                <Text>{activeTask.title}</Text>
-              </Paper>
-            ) : null}
-          </DragOverlay> */}
         </DndContext>
       </div>
     </Grid.Col>

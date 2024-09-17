@@ -9,7 +9,7 @@ const Home = () => {
         <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
           <div>
             {/* Trello */}
-            <div className="mt-[60px]">
+            <div className="">
               <Board />
             </div>
           </div>
