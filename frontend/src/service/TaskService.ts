@@ -233,7 +233,7 @@ class TaskService {
         TaskService.moveTask(token, taskActivity),
       {
         onSuccess: () => {
-          console.log("MOVE OK");
+          // console.log("MOVE OK");
           queryClient.invalidateQueries(["getTasks"]);
         },
         onError: (error) => {

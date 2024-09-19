@@ -1,5 +1,18 @@
+import React, { useState } from "react";
 import { Grid, Divider } from "@mantine/core";
 import Column from "./Column";
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  MouseSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { Task } from "../../../data/Task";
+import Card from "./Card"; // Ensure this imports correctly
+import TaskService from "../../../service/TaskService";
+import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 
 const privateColumns = [
   {
@@ -26,22 +39,71 @@ const publicColumns = [
 ];
 
 function Board() {
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [draggedTask, setDraggedTask] = useState<Task | null>(null);
+  const { mutate: moveTask } = TaskService.useMoveTask();
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over) return;
+
+    if (over?.id !== active.id) {
+      const oldColumnId = active.data.current?.sortable.index;
+      const newColumnId = over?.data.current?.sortable.index;
+      if (oldColumnId !== undefined && newColumnId !== undefined) {
+        setTasks((tasks) => {
+          const updatedTasks = arrayMove(tasks, oldColumnId, newColumnId);
+          return updatedTasks;
+        });
+      }
+      moveTask({
+        token: localStorage.getItem("authToken") ?? "",
+        taskActivity: {
+          taskId: active.data?.current?.item?.id,
+          overPosition: newColumnId,
+          overStatus: over.data?.current?.sortable?.containerId,
+        },
+      });
+    }
+    setDraggedTask(null);
+  };
+
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 20,
+      },
+    })
+  );
+
   return (
     <div>
-      <div className="text-[20px] mb-7 border w-32 h-11 flex items-center justify-center bg-white font-bold  rounded-md">
+      <div className="text-[20px] mb-7 border w-32 h-11 flex items-center justify-center bg-white font-bold rounded-md" >
         Your Task
       </div>
-      <Grid columns={12}>
-        {privateColumns.map((column) => (
-          <Column
-            key={column.id}
-            id={column.id}
-            title={column.title}
-            isPublic={column.isPublic}
-            status={column.status}
-          />
-        ))}
-      </Grid>
+
+      <DndContext
+        // onDragOver={(e) => console.log(e)}
+        onDragEnd={handleDragEnd}
+        onDragStart={(e) => setDraggedTask(e.active.data.current?.item ?? null)}
+        sensors={sensors}
+      >
+        <Grid columns={12}>
+          {privateColumns.map((column) => (
+            <Column
+              key={column.id}
+              id={column.id}
+              title={column.title}
+              isPublic={column.isPublic}
+              status={column.status}
+            />
+          ))}
+        </Grid>
+        <DragOverlay>
+          {draggedTask ? <Card item={draggedTask} /> : null}{" "}
+        </DragOverlay>
+      </DndContext>
       <Divider my="xl" />
 
       <div className="text-[20px] mb-7 border w-32 h-11 flex items-center justify-center bg-white font-bold rounded-md">

@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect, useMemo, useState } from "react";
+import { CSSProperties, useEffect, useMemo, useState } from "react";
 import {
   Button,
   Grid,
@@ -15,29 +15,18 @@ import { FaTasks } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import Card from "./Card";
 import AddCard from "./AddCard";
-import EditCard from "./EditCard";
 import TaskService from "../../../service/TaskService";
 import { useDisclosure } from "@mantine/hooks";
-
-import {
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-  MouseSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import { arrayMove, SortableContext } from "@dnd-kit/sortable";
+import { SortableContext } from "@dnd-kit/sortable";
 import { Task } from "../../../data/Task";
 import { useSearchStore } from "../../../main";
+import EditCard from "./EditCard";
 
 type ColumnProps = {
   id: number;
   title: string;
   isPublic: boolean;
   status: string;
-  // onTaskCount: (count: number) => void;
 };
 
 const Column = ({ id, title, isPublic, status }: ColumnProps) => {
@@ -47,7 +36,7 @@ const Column = ({ id, title, isPublic, status }: ColumnProps) => {
   const [editTask, setEditTask] = useState<any>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
-  const { searchString, setSearchString } = useSearchStore((state) => ({
+  const { searchString } = useSearchStore((state) => ({
     searchString: state.searchString,
     setSearchString: state.setSearchString,
   }));
@@ -67,7 +56,6 @@ const Column = ({ id, title, isPublic, status }: ColumnProps) => {
 
   const { mutate: takeTask } = TaskService.useTakeTask();
   const { mutate: cancelTakeTask } = TaskService.useCancelTakeTask();
-  const { mutate: moveTask } = TaskService.useMoveTask();
 
   const cardStyle: CSSProperties = {
     transition: "background-color 0.3s ease",
@@ -115,84 +103,42 @@ const Column = ({ id, title, isPublic, status }: ColumnProps) => {
     return [];
   }, [tasksData]);
 
-  const handleDragStart = (event: DragStartEvent) => {
-    const taskId = event.active.id;
-    const draggedTask = tasks.find((task) => task.id === Number(taskId));
-    setActiveTask(draggedTask || null);
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over) return;
-    if (over?.id !== active.id) {
-      const oldColumnId = active.data.current?.sortable.index;
-      const newColumnId = over?.data.current?.sortable.index;
-      if (oldColumnId !== undefined && newColumnId !== undefined) {
-        setTasks((tasks) => {
-          const updatedTasks = arrayMove(tasks, oldColumnId, newColumnId);
-          return updatedTasks;
-        });
-      }
-      moveTask({
-        token,
-        taskActivity: {
-          taskId: active.id,
-          overPosition: newColumnId,
-          overStatus: status,
-        },
-      });
-    }
-    setActiveTask(null);
-  };
-
-  const sensors = useSensors(
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 20,
-      },
-    })
-  );
-
   return (
-    <Grid.Col span={3}>
-      {/* Add Card Modal */}
-      <Modal.Root opened={opened} onClose={close} size="lg">
-        <Modal.Overlay />
-        <Modal.Content bg="#f2f4f4">
-          <Modal.Header py={0} bg="#f2f4f4">
-            <Modal.CloseButton />
-          </Modal.Header>
-          <Modal.Body>
-            <AddCard closeForm={close} />
-          </Modal.Body>
-        </Modal.Content>
-      </Modal.Root>
+    <>
+      <Grid.Col span={3}>
+        {/* Add Card Modal */}
+        <Modal.Root opened={opened} onClose={close} size="xl">
+          <Modal.Overlay />
+          <Modal.Content bg="#f2f4f4">
+            <Modal.Header py={0} bg="#f2f4f4">
+              <Modal.CloseButton />
+            </Modal.Header>
+            <Modal.Body>
+              <AddCard closeForm={close} />
+            </Modal.Body>
+          </Modal.Content>
+        </Modal.Root>
 
-      {/* Edit Task Modal */}
-      <Modal.Root opened={editOpened} onClose={closeEdit} size="lg">
-        <Modal.Overlay />
-        <Modal.Content bg="#f2f4f4">
-          <Modal.Header py={0} bg="#f2f4f4">
-            <Modal.CloseButton />
-          </Modal.Header>
-          <Modal.Body>
-            {editTask && (
-              <EditCard
-                closeForm={closeEdit}
-                cardData={editTask}
-                status={status}
-              />
-            )}
-          </Modal.Body>
-        </Modal.Content>
-      </Modal.Root>
+        {/* Edit Task Modal */}
+        <Modal.Root opened={editOpened} onClose={closeEdit} size="xl">
+          <Modal.Overlay />
+          <Modal.Content bg="#f2f4f4">
+            <Modal.Header py={0} bg="#f2f4f4">
+              <Modal.CloseButton />
+            </Modal.Header>
+            <Modal.Body>
+              {editTask && (
+                <EditCard
+                  closeForm={closeEdit}
+                  cardData={editTask}
+                  status={status}
+                />
+              )}
+            </Modal.Body>
+          </Modal.Content>
+        </Modal.Root>
 
-      <div className="flex items-center justify-center">
-        <DndContext
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-          sensors={sensors}
-        >
+        <div className="flex items-center justify-center">
           <Paper
             w="100%"
             p="md"
@@ -276,30 +222,30 @@ const Column = ({ id, title, isPublic, status }: ColumnProps) => {
                               Cancel Task
                             </div>
                           </Menu.Item>
-                        )}
+                        )}{" "}
                       </Menu.Dropdown>
                     </Menu>
                   ))}
                 </Stack>
               </ScrollArea.Autosize>
-
               {status === "TO_DO_LIST" && (
                 <div className="mt-4">
                   <Button
                     onClick={open}
                     variant="gradient"
-                    gradient={{ from: "#1e2a48", to: "#1f538f", deg: 100 }}
-                    style={{ width: "auto" }}
+                    gradient={{ from: "#1e2a48", to: "#0f1829", deg: 35 }}
+                    w="100%"
+                    h={40}
                   >
-                    Add Ne Task
+                    Add Task
                   </Button>
                 </div>
               )}
             </SortableContext>
           </Paper>
-        </DndContext>
-      </div>
-    </Grid.Col>
+        </div>
+      </Grid.Col>
+    </>
   );
 };
 

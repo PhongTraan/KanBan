@@ -5,7 +5,6 @@ import { useSearchStore } from "../../../main";
 function Header() {
   const navigate = useNavigate();
   const email = localStorage.getItem("email") || "Email Name";
-  console.log("email", email);
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");

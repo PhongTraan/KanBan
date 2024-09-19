@@ -82,119 +82,119 @@ function AddCard({ closeForm }: Props) {
 
   return (
     <div>
-      <Box>
-        <Container>
-          <div className="text-[18px] font-bold">Add New Task</div>
-          <Grid gutter="xl" className="mt-6">
-            <Grid.Col span={12}>
-              <TextInput
-                label="Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Enter title here"
-                error={error}
-              />
-              {error && (
-                <Text style={{ color: "red" }} size="sm" mt="xs">
-                  {error}
-                </Text>
-              )}
-            </Grid.Col>
-          </Grid>
+      <Container>
+        <div className="text-[18px] font-bold">Add New Task</div>
+        <Grid gutter="xl" className="mt-6">
+          <Grid.Col span={12}>
+            <div className="font-bold mt-5">Title</div>
+            <TextInput
+              // label="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter title here"
+              error={error}
+            />
+            {error && (
+              <Text style={{ color: "red" }} size="sm" mt="xs">
+                {error}
+              </Text>
+            )}
+          </Grid.Col>
+        </Grid>
 
-          <Grid gutter="xl">
-            <Grid.Col span={12}>
-              <NativeSelect
-                value={from}
-                onChange={(e) => setFrom(e.currentTarget.value)}
-                label="From"
-                data={[
-                  { value: "TO_DO_LIST", label: "To Do" },
-                  { value: "IN_PROGRESS", label: "In Progress" },
-                  { value: "DONE", label: "Done" },
-                  { value: "CANCEL", label: "Cancel" },
-                ]}
-              />
-            </Grid.Col>
-          </Grid>
+        <Grid gutter="xl">
+          <Grid.Col span={12}>
+            <div className="font-bold mt-5 ">From</div>
+            <NativeSelect
+              value={from}
+              onChange={(e) => setFrom(e.currentTarget.value)}
+              // label="From"
+              data={[
+                { value: "TO_DO_LIST", label: "To Do" },
+                { value: "IN_PROGRESS", label: "In Progress" },
+                { value: "DONE", label: "Done" },
+                { value: "CANCEL", label: "Cancel" },
+              ]}
+            />
+          </Grid.Col>
+        </Grid>
 
-          <Grid gutter="xl" align="flex-end">
-            <Grid.Col span={6}>
-              <DateInput
-                clearable
-                value={date}
-                onChange={setDate}
-                label="Date Time"
-                placeholder="Pick date and time"
-              />
-            </Grid.Col>
-            {/* {isPublic === true } */}
+        <div className="font-bold mt-5 ">Date Time</div>
+        <Grid gutter="xl" align="flex-end">
+          <Grid.Col span={6}>
+            <DateInput
+              clearable
+              value={date}
+              onChange={setDate}
+              placeholder="Pick date and time"
+            />
+          </Grid.Col>
+          {/* {isPublic === true } */}
 
-            <Grid.Col span={6}>
-              <Checkbox
-                label="Public"
-                checked={isPublic}
-                onChange={(e) => setIsPublic(e.currentTarget.checked)}
-                size="md"
-              />
-            </Grid.Col>
-          </Grid>
+          <Grid.Col span={6}>
+            <Checkbox
+              label="Public"
+              checked={isPublic}
+              onChange={(e) => setIsPublic(e.currentTarget.checked)}
+              size="md"
+            />
+          </Grid.Col>
+        </Grid>
 
-          <div className="font-bold mt-5">Description</div>
-          <RichTextEditor editor={editor}>
-            <RichTextEditor.Toolbar sticky stickyOffset={60}>
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Bold />
-                <RichTextEditor.Italic />
-                <RichTextEditor.Underline />
-                <RichTextEditor.Strikethrough />
-                <RichTextEditor.ClearFormatting />
-                <RichTextEditor.Highlight />
-                <RichTextEditor.Code />
-              </RichTextEditor.ControlsGroup>
+        <div className="font-bold mt-5">Description</div>
+        <RichTextEditor editor={editor}>
+          <RichTextEditor.Toolbar sticky stickyOffset={60}>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.Bold />
+              <RichTextEditor.Italic />
+              <RichTextEditor.Underline />
+              <RichTextEditor.Strikethrough />
+              <RichTextEditor.ClearFormatting />
+              <RichTextEditor.Highlight />
+              <RichTextEditor.Code />
+            </RichTextEditor.ControlsGroup>
 
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.H1 />
-                <RichTextEditor.H2 />
-                <RichTextEditor.H3 />
-                <RichTextEditor.H4 />
-              </RichTextEditor.ControlsGroup>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.H1 />
+              <RichTextEditor.H2 />
+              <RichTextEditor.H3 />
+              <RichTextEditor.H4 />
+            </RichTextEditor.ControlsGroup>
 
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Blockquote />
-                <RichTextEditor.Hr />
-                <RichTextEditor.BulletList />
-                <RichTextEditor.OrderedList />
-                <RichTextEditor.Subscript />
-                <RichTextEditor.Superscript />
-              </RichTextEditor.ControlsGroup>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.Blockquote />
+              <RichTextEditor.Hr />
+              <RichTextEditor.BulletList />
+              <RichTextEditor.OrderedList />
+              <RichTextEditor.Subscript />
+              <RichTextEditor.Superscript />
+            </RichTextEditor.ControlsGroup>
 
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Link />
-                <RichTextEditor.Unlink />
-              </RichTextEditor.ControlsGroup>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.Link />
+              <RichTextEditor.Unlink />
+            </RichTextEditor.ControlsGroup>
 
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.AlignLeft />
-                <RichTextEditor.AlignCenter />
-                <RichTextEditor.AlignJustify />
-                <RichTextEditor.AlignRight />
-              </RichTextEditor.ControlsGroup>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.AlignLeft />
+              <RichTextEditor.AlignCenter />
+              <RichTextEditor.AlignJustify />
+              <RichTextEditor.AlignRight />
+            </RichTextEditor.ControlsGroup>
 
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Undo />
-                <RichTextEditor.Redo />
-              </RichTextEditor.ControlsGroup>
-            </RichTextEditor.Toolbar>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.Undo />
+              <RichTextEditor.Redo />
+            </RichTextEditor.ControlsGroup>
+          </RichTextEditor.Toolbar>
 
-            <RichTextEditor.Content />
-          </RichTextEditor>
+          <RichTextEditor.Content />
+        </RichTextEditor>
 
-          <Button className="mt-5 ml-4" onClick={handleSave}>
-            Save
-          </Button>
-        </Container>
-      </Box>
+        <Button className="mt-5 ml-4" onClick={handleSave}>
+          Save
+        </Button>
+      </Container>
     </div>
   );
 }
